@@ -56,6 +56,7 @@
     "eslint-config-airbnb-typescript": "^11.0.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.0",
     "jest": "^25.1.0",
     "prettier": "^1.19.1",
     "supertest": "^4.0.2",

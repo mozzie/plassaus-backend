@@ -1,4 +1,5 @@
 const tables = [
+  'event',
   'user',
 ];
 

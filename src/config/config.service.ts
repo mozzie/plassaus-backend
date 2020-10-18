@@ -48,7 +48,7 @@ class ConfigService {
       migrations: [`${__dirname}/../migration/*.ts`],
       migrationsRun: true,
       migrationsTableName: 'plassaus_backend_migrations',
-      logging: true,
+      logging: false,
       cli: {
         migrationsDir: '/../migration/',
       },

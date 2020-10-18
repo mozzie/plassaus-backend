@@ -23,7 +23,7 @@ describe('AppController (e2e)', () => {
     /* eslint-disable-next-line no-restricted-syntax */
     for (const table of tables) {
       /* eslint-disable-next-line no-await-in-loop */
-      await connection.query(`truncate ${table}`);
+      await connection.query(`delete from ${table}`);
     }
   });
 
@@ -39,7 +39,7 @@ describe('AppController (e2e)', () => {
     /* eslint-disable-next-line no-restricted-syntax */
     for (const table of tables) {
       /* eslint-disable-next-line no-await-in-loop */
-      await connection.query(`truncate ${table}`);
+      await connection.query(`delete from ${table}`);
     }
   });
 
@@ -153,50 +153,6 @@ describe('AppController (e2e)', () => {
           username: 'testuser@email.com',
           password: 'password122',
         })
-        .expect(401);
-    });
-  });
-
-  describe('/profile (GET)', () => {
-    let accessToken : string;
-    beforeAll(async () => {
-      await request(app.getHttpServer())
-        .post('/register')
-        .send({
-          name: 'test user',
-          email: 'test@email.com',
-          password: 'password123',
-          password2: 'password123',
-        })
-        .expect(201);
-      const res = await request(app.getHttpServer())
-        .post('/login')
-        .send({
-          username: 'test@email.com',
-          password: 'password123',
-        })
-        .expect(201);
-      accessToken = res.body.access_token;
-    });
-
-    it('profile should return user data', async () => {
-      const res = await request(app.getHttpServer())
-        .get('/profile')
-        .set({ Authorization: `Bearer ${accessToken}` })
-        .expect(200);
-      expect(res).toHaveProperty('body');
-      const user = res.body;
-      expect(user.name).toEqual('test user');
-      expect(user.email).toEqual('test@email.com');
-      expect(user).not.toHaveProperty('password');
-      expect(user).not.toHaveProperty('password2');
-      expect(user).toHaveProperty('id');
-    });
-
-    it('profile with wrong authorization should return 401', async () => {
-      await request(app.getHttpServer())
-        .get('/profile')
-        .set({ Authorization: `Bearer ${accessToken.slice(1)}` })
         .expect(401);
     });
   });

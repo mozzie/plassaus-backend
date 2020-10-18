@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import User from './user.entity';
 import UserDTO from './user.dto';
+import JwtUser from '../auth/jwtuser.entity';
 
 @Injectable()
 class UserService {
@@ -27,6 +28,18 @@ class UserService {
 
   async findByEmail(email: string) : Promise<User> {
     return this.userRepository.findOne({ email });
+  }
+
+  async update(dto: UserDTO, jwtUser: JwtUser) : Promise<void> {
+    const newDTO : UserDTO = new UserDTO();
+    newDTO.id = jwtUser.id;
+    if (dto.name) {
+      newDTO.name = dto.name;
+    }
+    if (dto.password) {
+      newDTO.password = dto.password;
+    }
+    await this.userRepository.update({ id: jwtUser.id }, newDTO);
   }
 }
 

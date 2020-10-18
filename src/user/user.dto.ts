@@ -1,19 +1,25 @@
-import { Length, IsEmail, IsNotEmpty } from 'class-validator';
+import {
+  Length, IsEmail, IsNotEmpty, IsOptional,
+} from 'class-validator';
 
 class UserDTO {
   id: number;
 
+  @IsOptional()
   @Length(3, 100)
-  name: string;
+  name?: string;
 
+  @IsOptional()
   @IsEmail()
-  email: string;
+  email?: string;
 
+  @IsOptional()
   @IsNotEmpty()
-  password: string;
+  password?: string;
 
+  @IsOptional()
   @IsNotEmpty()
-  password2: string;
+  password2?: string;
 }
 
 export default UserDTO;

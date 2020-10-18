@@ -32,33 +32,33 @@ describe('AuthService', () => {
   });
 
   describe('validateUser', () => {
-    it('should query DB for the user and return null if user is not found', () => {
+    it('should query DB for the user and return null if user is not found', async () => {
       const user: User = undefined;
       const findSpy = jest.spyOn(userService, 'findByEmail').mockImplementation(async () => Promise.resolve(user));
       expect(findSpy).toHaveBeenCalledTimes(0);
-      service.validateUser('email', 'password').then((data) => {
+      await service.validateUser('email', 'password').then((data) => {
         expect(findSpy).toHaveBeenCalledTimes(1);
         expect(data).toBeNull();
       });
     });
-    it('should query DB for the user and return null if password does not match', () => {
+    it('should query DB for the user and return null if password does not match', async () => {
       const user: User = new User();
       user.email = 'email';
       user.password = 'wrong_password';
       const findSpy = jest.spyOn(userService, 'findByEmail').mockImplementation(async () => Promise.resolve(user));
       expect(findSpy).toHaveBeenCalledTimes(0);
-      service.validateUser('email', 'password').then((data) => {
+      await service.validateUser('email', 'password').then((data) => {
         expect(findSpy).toHaveBeenCalledTimes(1);
         expect(data).toBeNull();
       });
     });
-    it('should query DB for the user and return user if user is found and password matches', () => {
+    it('should query DB for the user and return user if user is found and password matches', async () => {
       const user: User = new User();
       user.email = 'email';
       user.password = 'password';
       const findSpy = jest.spyOn(userService, 'findByEmail').mockImplementation(async () => Promise.resolve(user));
       expect(findSpy).toHaveBeenCalledTimes(0);
-      service.validateUser('email', 'password').then((data) => {
+      await service.validateUser('email', 'password').then((data) => {
         expect(findSpy).toHaveBeenCalledTimes(1);
         expect(data).toEqual(user.getDTO());
       });
@@ -76,12 +76,12 @@ describe('AuthService', () => {
   });
 
   describe('login', () => {
-    it('should call jwtService.sign and query DB', () => {
+    it('should call jwtService.sign and query DB', async () => {
       const findSpy = jest.spyOn(userService, 'findByEmail').mockImplementation(async () => Promise.resolve(new User()));
       const signSpy = jest.spyOn(jwtService, 'sign').mockImplementation(() => null);
       expect(signSpy).toHaveBeenCalledTimes(0);
       expect(findSpy).toHaveBeenCalledTimes(0);
-      service.login('email').then(() => {
+      await service.login('email').then(() => {
         expect(signSpy).toHaveBeenCalledTimes(1);
         expect(findSpy).toHaveBeenCalledTimes(1);
       });

@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import UserModule from './user/user.module';
+import EventModule from './event/event.module';
 import AuthService from './auth/auth.service';
 import AppController from './app.controller';
 import UserService from './user/user.service';
@@ -20,6 +22,8 @@ import LocalStrategy from './auth/local.strategy';
       secret: configService.getJwtSecret(),
       signOptions: { expiresIn: '86400s' },
     }),
+    EventModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService, UserService, AuthService, JwtStrategy, LocalStrategy],

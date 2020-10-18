@@ -1,4 +1,12 @@
 module.exports = {
+  rules: {
+    '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars-experimental': 'error',
+    'import/no-cycle': 'off', // TypeORM relations need this?
+  },
+  plugins: [
+    'jest'
+  ],
   extends: [
     'airbnb-typescript/base',
     'plugin:@typescript-eslint/recommended',
@@ -8,6 +16,7 @@ module.exports = {
     project: './tsconfig.json',
   },
   env: {
-    jest: true
+    jest: true,
+    'jest/globals': true
   }
 };

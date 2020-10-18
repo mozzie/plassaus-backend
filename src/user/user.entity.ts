@@ -1,7 +1,8 @@
 import {
-  Column, Entity, PrimaryColumn,
+  Column, Entity, OneToMany, PrimaryColumn,
 } from 'typeorm';
 import UserDTO from './user.dto';
+import Event from '../event/event.entity';
 
 @Entity('user')
 class User {
@@ -16,6 +17,9 @@ class User {
 
   @Column({ length: 100 })
   password: string;
+
+  @OneToMany(() => Event, (event) => event.owner)
+  events: Event[];
 
   setDTO(dto: UserDTO) : void {
     this.name = dto.name;

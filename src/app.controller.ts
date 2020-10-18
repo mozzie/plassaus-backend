@@ -1,14 +1,11 @@
 import {
-  Controller, Get, Post, Body, UseGuards,
+  Controller, Post, Body, UseGuards,
 } from '@nestjs/common';
 import UserService from './user/user.service';
 import UserDTO from './user/user.dto';
 import LoginDTO from './auth/login.dto';
 import AuthService from './auth/auth.service';
 import LocalAuthGuard from './auth/local-auth.guard';
-import JwtAuthGuard from './auth/jwt-auth.guard';
-import AuthUser from './auth/authuser.decorator';
-import JwtUser from './auth/jwtuser.entity';
 
 @Controller('/')
 class AppController {
@@ -24,13 +21,6 @@ class AppController {
   @Post('login')
   async login(@Body() login : LoginDTO) : Promise<{[key: string] : string}> {
     return this.authService.login(login.username);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  async getProfile(@AuthUser() jwtUser : JwtUser) : Promise<UserDTO> {
-    const user = await this.userService.findByEmail(jwtUser.email);
-    return user.getDTO();
   }
 }
 

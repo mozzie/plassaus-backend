@@ -31,13 +31,21 @@
 ## TODO
 
 ```bash
- - Endpoint for email and password change
- - Event CRUD
+ - fix test coverage (mock classes etc)
+ - password encryption
+ - add "deleted" field to each entity
+ - rename jwtuser.entity to jwt.user or similar (not an actual entity)
+ - check other namings too
+ - tests for: events, admin stuff, delete
+ - make user.email unique
+ - create base-entity and put ID, created, updated, deleted there
  - Event guest CRUD
  - Event table CRUD
  - Event table seating
  - Event table map publishing
  - Admin users
+ - fail tests if expects fail async
+ - get tests to run main.ts (instead of declaring filters and pipes in the e2e file)
 ```
 
 ## Installation

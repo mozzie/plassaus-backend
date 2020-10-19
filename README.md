@@ -32,7 +32,6 @@
 
 ```bash
  - fix test coverage (mock classes etc)
- - password encryption
  - add "deleted" field to each entity
  - rename jwtuser.entity to jwt.user or similar (not an actual entity)
  - check other namings too

@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import User from './user.entity';
 import UserDTO from './user.dto';
 import JwtUser from '../auth/jwtuser.entity';
@@ -21,7 +22,8 @@ class UserService {
       throw new BadRequestException('User with this email already exists');
     }
     const user: User = new User();
-    user.setDTO(dto);
+    await user.setDTO(dto);
+
     await this.userRepository.save(user);
     return user.getDTO();
   }
@@ -37,7 +39,7 @@ class UserService {
       newDTO.name = dto.name;
     }
     if (dto.password) {
-      newDTO.password = dto.password;
+      newDTO.password = await bcrypt.hash(dto.password, 10);
     }
     await this.userRepository.update({ id: jwtUser.id }, newDTO);
   }

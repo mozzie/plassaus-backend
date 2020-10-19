@@ -1,6 +1,7 @@
 import {
   Column, Entity, OneToMany, PrimaryColumn,
 } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import UserDTO from './user.dto';
 import Event from '../event/event.entity';
 
@@ -21,10 +22,10 @@ class User {
   @OneToMany(() => Event, (event) => event.owner)
   events: Event[];
 
-  setDTO(dto: UserDTO) : void {
+  async setDTO(dto: UserDTO) : Promise<void> {
     this.name = dto.name;
     this.email = dto.email;
-    this.password = dto.password;
+    this.password = await bcrypt.hash(dto.password, 10);
   }
 
   getDTO() : UserDTO {

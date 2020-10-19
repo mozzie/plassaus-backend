@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import AuthService from './auth.service';
 import UserService from '../user/user.service';
 import mockedJwtService from './jwtservice.mock';
@@ -44,7 +45,7 @@ describe('AuthService', () => {
     it('should query DB for the user and return null if password does not match', async () => {
       const user: User = new User();
       user.email = 'email';
-      user.password = 'wrong_password';
+      user.password = await bcrypt.hash('wrong_password', 10);
       const findSpy = jest.spyOn(userService, 'findByEmail').mockImplementation(async () => Promise.resolve(user));
       expect(findSpy).toHaveBeenCalledTimes(0);
       await service.validateUser('email', 'password').then((data) => {
@@ -55,7 +56,7 @@ describe('AuthService', () => {
     it('should query DB for the user and return user if user is found and password matches', async () => {
       const user: User = new User();
       user.email = 'email';
-      user.password = 'password';
+      user.password = await bcrypt.hash('password', 10);
       const findSpy = jest.spyOn(userService, 'findByEmail').mockImplementation(async () => Promise.resolve(user));
       expect(findSpy).toHaveBeenCalledTimes(0);
       await service.validateUser('email', 'password').then((data) => {

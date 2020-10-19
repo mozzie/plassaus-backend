@@ -1,4 +1,4 @@
-import JwtPayload from './jwtpayload.entity';
+import JwtPayload from '../src/auth/jwtpayload.entity';
 
 const mockedJwtService = {
   sign(payload : JwtPayload) : string {

@@ -413,4 +413,61 @@ describe('EventController (e2e)', () => {
       ]);
     });
   });
+  describe('/event/:id (DELETE)', () => {
+    let eventId;
+    beforeEach(async () => {
+      await request(app.getHttpServer())
+        .post('/events')
+        .set({ Authorization: `Bearer ${accessToken}` })
+        .send({
+          name: 'test_event',
+        })
+        .expect(201);
+      const res = await request(app.getHttpServer())
+        .get('/events')
+        .set({ Authorization: `Bearer ${accessToken}` })
+        .expect(200);
+      expect(res.body.length === 1);
+      eventId = res.body[0].id;
+    });
+
+    it('valid event should be deleted from database', async () => {
+      const beforeDelete = await request(app.getHttpServer())
+        .get('/events')
+        .set({ Authorization: `Bearer ${accessToken}` })
+        .expect(200);
+      expect(beforeDelete.body.length === 1);
+
+      await request(app.getHttpServer())
+        .delete(`/events/${eventId}`)
+        .set({ Authorization: `Bearer ${accessToken}` })
+        .expect(200);
+
+      const afterDelete = await request(app.getHttpServer())
+        .get('/events')
+        .set({ Authorization: `Bearer ${accessToken}` })
+        .expect(200);
+      expect(afterDelete.body.length === 0);
+    });
+
+    it('valid event should not be deleted with wrong accessToken', async () => {
+      const beforeDelete = await request(app.getHttpServer())
+        .get('/events')
+        .set({ Authorization: `Bearer ${accessToken}` })
+        .expect(200);
+      expect(beforeDelete.body.length === 1);
+
+      await request(app.getHttpServer())
+        .delete(`/events/${eventId}`)
+        .set({ Authorization: `Bearer ${otherAccessToken}` })
+        .expect(404);
+
+      const afterDelete = await request(app.getHttpServer())
+        .get('/events')
+        .set({ Authorization: `Bearer ${accessToken}` })
+        .expect(200);
+      expect(afterDelete.body.length === 1);
+    });
+
+  });
 });

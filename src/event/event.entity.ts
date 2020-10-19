@@ -1,14 +1,12 @@
 import {
-  Column, Entity, JoinColumn, ManyToOne, PrimaryColumn,
+  Column, Entity, JoinColumn, ManyToOne,
 } from 'typeorm';
 import EventDTO from './event.dto';
 import User from '../user/user.entity';
+import BaseEntity from '../base.entity';
 
 @Entity('event')
-class Event {
-  @PrimaryColumn()
-  id: number;
-
+class Event extends BaseEntity {
   @Column({ length: 100 })
   name: string;
 

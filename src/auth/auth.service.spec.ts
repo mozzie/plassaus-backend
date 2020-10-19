@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import AuthService from './auth.service';
 import UserService from '../user/user.service';
-import mockedJwtService from './jwtservice.mock';
+import mockedJwtService from '../../test/jwtservice.mock';
 import User from '../user/user.entity';
 
 describe('AuthService', () => {

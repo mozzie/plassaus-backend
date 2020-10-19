@@ -1,5 +1,5 @@
 import {
-  Body, Controller, Get, Param, Post, Put, Query, UseGuards,
+  Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards,
 } from '@nestjs/common';
 import EventService from './event.service';
 import JwtAuthGuard from '../auth/jwt-auth.guard';
@@ -37,6 +37,12 @@ class EventController {
     const sanitizedDTO : EventDTO = (({ id, name }) => ({ id, name }))(dto);
     sanitizedDTO.id = eventId;
     await this.eventService.update(sanitizedDTO, jwtUser);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  async deleteEvent(@AuthUser() jwtUser: JwtUser, @Param('id') id: number) : Promise<void> {
+    return this.eventService.delete(id, jwtUser);
   }
 }
 

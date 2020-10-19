@@ -13,6 +13,10 @@ class UserService {
   ) {}
 
   async create(dto: UserDTO) : Promise<UserDTO> {
+    if (!dto.password) {
+      throw new BadRequestException('Password cannot be empty');
+    }
+
     if (dto.password !== dto.password2) {
       throw new BadRequestException('Passwords did not match');
     }

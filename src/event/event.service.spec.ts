@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { UpdateResult, Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import EventService from './event.service';
 import Event from './event.entity';
 import EventDTO from './event.dto';
@@ -98,6 +99,42 @@ describe('EventService', () => {
       dto.id = 2;
       await service.update(dto, jwtUser).then(() => {
         expect(updateSpy).toHaveBeenCalledWith({ owner: { id: 4 }, id: 2 }, dto);
+      });
+    });
+    it('should not call repository if event is not found', async () => {
+      jest.spyOn(repository, 'findOneOrFail').mockImplementation(async () => Promise.reject(new EntityNotFoundError('event', { id: 2 })));
+      const updateSpy = jest.spyOn(repository, 'update').mockImplementation(async () => Promise.resolve(new UpdateResult()));
+      const jwtUser : JwtUser = new JwtUser();
+      jwtUser.id = 4;
+      const dto : EventDTO = new EventDTO();
+      dto.name = 'new_name';
+      dto.id = 2;
+      await service.update(dto, jwtUser).catch(() => {
+        expect(updateSpy).toHaveBeenCalledTimes(0);
+      });
+    });
+  });
+
+  describe('delete', () => {
+    it('should call repository with correct event ID', async () => {
+      const event = new Event();
+      event.id = 2;
+      jest.spyOn(repository, 'findOneOrFail').mockImplementation(async () => Promise.resolve(event));
+      const updateSpy = jest.spyOn(repository, 'softDelete').mockImplementation(async () => Promise.resolve(new UpdateResult()));
+      const jwtUser : JwtUser = new JwtUser();
+      jwtUser.id = 4;
+      await service.delete(2, jwtUser).then(() => {
+        expect(updateSpy).toHaveBeenCalledWith(2);
+      });
+    });
+
+    it('should not call repository if event is not found', async () => {
+      jest.spyOn(repository, 'findOneOrFail').mockImplementation(async () => Promise.reject(new EntityNotFoundError('event', { id: 2 })));
+      const deleteSpy = jest.spyOn(repository, 'softDelete').mockImplementation(async () => Promise.resolve(new UpdateResult()));
+      const jwtUser : JwtUser = new JwtUser();
+      jwtUser.id = 4;
+      await service.delete(2, jwtUser).catch(() => {
+        expect(deleteSpy).toHaveBeenCalledTimes(0);
       });
     });
   });

@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import { UpdateResult, Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { BadRequestException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import UserService from './user.service';
 import User from './user.entity';
 import UserDTO from './user.dto';
@@ -29,6 +30,12 @@ describe('UserService', () => {
       const dto : UserDTO = new UserDTO();
       dto.password = 'password1';
       dto.password2 = 'password2';
+      await expect(service.create(dto)).rejects.toThrow(BadRequestException);
+    });
+
+    it('should return BadRequestException if passwords do not exist', async () => {
+      const dto : UserDTO = new UserDTO();
+      dto.email = 'user@email.com';
       await expect(service.create(dto)).rejects.toThrow(BadRequestException);
     });
 
@@ -77,6 +84,19 @@ describe('UserService', () => {
       dto.name = 'updated';
       await service.update(dto, jwtUser).then(() => {
         expect(saveSpy).toHaveBeenCalledWith({ id: 3 }, dto);
+      });
+    });
+
+    it('should hash password if password exists', async () => {
+      const saveSpy = jest.spyOn(repository, 'update').mockImplementation(async () => Promise.resolve(new UpdateResult()));
+      const jwtUser : JwtUser = new JwtUser();
+      jwtUser.id = 3;
+      const dto : UserDTO = new UserDTO();
+      dto.id = 3;
+      dto.password = 'new_pass';
+      await service.update(dto, jwtUser).then(async () => {
+        expect(await bcrypt.compare(dto.password, saveSpy.mock.calls[0][1].password.toString()))
+          .toBe(true);
       });
     });
   });

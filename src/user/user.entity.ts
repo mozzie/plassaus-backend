@@ -1,15 +1,11 @@
-import {
-  Column, Entity, OneToMany, PrimaryColumn,
-} from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import UserDTO from './user.dto';
 import Event from '../event/event.entity';
+import BaseEntity from '../base.entity';
 
-@Entity('user')
-class User {
-  @PrimaryColumn()
-  id: number;
-
+@Entity({ name: 'user' })
+class User extends BaseEntity {
   @Column({ length: 100 })
   name: string;
 

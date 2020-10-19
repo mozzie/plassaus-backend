@@ -22,7 +22,8 @@ class EventService {
   }
 
   async findOne(id: number, jwtUser: JwtUser) : Promise<EventDTO> {
-    return this.eventRepository.findOneOrFail({ id, owner: { id: jwtUser.id } });
+    const event = await this.eventRepository.findOneOrFail({ id, owner: { id: jwtUser.id } });
+    return event.getDTO();
   }
 
   async find(filter: EventFilter, jwtUser: JwtUser) : Promise<EventDTO[]> {
@@ -41,6 +42,11 @@ class EventService {
   async update(dto: EventDTO, jwtUser: JwtUser) : Promise<void> {
     await this.findOne(dto.id, jwtUser); // checks for existence and access rights
     await this.eventRepository.update({ id: dto.id, owner: { id: jwtUser.id } }, dto);
+  }
+
+  async delete(id: number, jwtUser: JwtUser) : Promise<void> {
+    await this.findOne(id, jwtUser); // checks for existence and access rights
+    await this.eventRepository.softDelete(id);
   }
 }
 

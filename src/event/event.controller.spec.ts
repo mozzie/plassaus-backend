@@ -49,5 +49,14 @@ describe('EventController', () => {
       await controller.updateEvent(new JwtUser(), new EventDTO(), 1)
         .then(() => expect(createSpy).toHaveBeenCalledTimes(1));
     });
+
+    describe('deleteEvent', () => {
+      it('should call eventService.delete', async () => {
+        const deleteSpy = jest.spyOn(eventService, 'delete').mockImplementation(async () => Promise.resolve());
+        expect(deleteSpy).toHaveBeenCalledTimes(0);
+        await controller.deleteEvent(new JwtUser(), 1)
+          .then(() => expect(deleteSpy).toHaveBeenCalledTimes(1));
+      });
+    });
   });
 });

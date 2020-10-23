@@ -120,11 +120,11 @@ describe('EventService', () => {
       const event = new Event();
       event.id = 2;
       jest.spyOn(repository, 'findOneOrFail').mockImplementation(async () => Promise.resolve(event));
-      const updateSpy = jest.spyOn(repository, 'softDelete').mockImplementation(async () => Promise.resolve(new UpdateResult()));
+      const deleteSpy = jest.spyOn(repository, 'softDelete').mockImplementation(async () => Promise.resolve(new UpdateResult()));
       const jwtUser : JwtUser = new JwtUser();
       jwtUser.id = 4;
       await service.delete(2, jwtUser).then(() => {
-        expect(updateSpy).toHaveBeenCalledWith(2);
+        expect(deleteSpy).toHaveBeenCalledWith(2);
       });
     });
 

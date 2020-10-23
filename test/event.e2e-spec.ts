@@ -156,7 +156,7 @@ describe('EventController (e2e)', () => {
         .expect(200);
     });
 
-    it('Event should note be found from database with a wrong user', async () => {
+    it('Event should not be found from database with a wrong user', async () => {
       await request(app.getHttpServer())
         .get(`/events/${eventId}`)
         .set({ Authorization: `Bearer ${otherAccessToken}` })

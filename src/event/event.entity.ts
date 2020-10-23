@@ -1,9 +1,10 @@
 import {
-  Column, Entity, JoinColumn, ManyToOne,
+  Column, Entity, JoinColumn, ManyToOne, OneToMany,
 } from 'typeorm';
 import EventDTO from './event.dto';
 import User from '../user/user.entity';
 import BaseEntity from '../base.entity';
+import Guest from '../guest/guest.entity';
 
 @Entity('event')
 class Event extends BaseEntity {
@@ -13,6 +14,9 @@ class Event extends BaseEntity {
   @ManyToOne(() => User, (user) => user.events)
   @JoinColumn({ name: 'owner_id' })
   owner: User;
+
+  @OneToMany(() => Guest, (guest) => guest.event)
+  guests: Guest[];
 
   setDTO(dto: EventDTO) : void {
     this.name = dto.name;

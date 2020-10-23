@@ -31,11 +31,6 @@ class User extends BaseEntity {
     dto.email = this.email;
     return dto;
   }
-
-//  @BeforeInsert()
-  // async hashPassword() {
-  //   this.password = await bcrypt.hash(this.password, 10);
-  // }
 }
 
 export default User;

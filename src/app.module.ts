@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import GuestModule from './guest/guest.module';
 import UserModule from './user/user.module';
 import EventModule from './event/event.module';
 import AuthService from './auth/auth.service';
@@ -24,6 +25,7 @@ import LocalStrategy from './auth/local.strategy';
     }),
     EventModule,
     UserModule,
+    GuestModule,
   ],
   controllers: [AppController],
   providers: [AppService, UserService, AuthService, JwtStrategy, LocalStrategy],
